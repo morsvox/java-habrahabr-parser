@@ -13,6 +13,7 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Main extends Application {
 
@@ -45,17 +46,23 @@ public class Main extends Application {
         btns.add("java");
         btns.add("python");
         btns.add("top");
+        btns.add("reboot");
 
         for (int i = 0; i < btns.size(); i++) {
             String name = btns.get(i);
-            Button php = new Button(name);
-            php.setWrapText(true);
+            String link = name;
+            if(Objects.equals(name, "reboot")){
+                link = "";
+            }
+            Button btn = new Button(name);
+            btn.setWrapText(true);
             //вешаем событие на клик
-            php.setOnAction(actionEvent ->  {
-                fxStarter(primaryStage,name);
+            String finalLink = link;
+            btn.setOnAction(actionEvent ->  {
+                fxStarter(primaryStage, finalLink);
             });
             //пихаем в вертикальный список кнопку
-            vbox.getChildren().add(php);
+            vbox.getChildren().add(btn);
         }
 
         vbox.setSpacing(10);
@@ -95,6 +102,7 @@ public class Main extends Application {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        assert doc != null;
         return doc.select(".post__title_link");
     }
 }
