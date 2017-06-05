@@ -79,7 +79,7 @@ public class Main extends Application {
 
 
     private static Elements parse(String type){
-        String url = "";
+        String url = "all/";
         if( !type.isEmpty() ){
             switch (type){
                 case "php":
