@@ -1,9 +1,12 @@
 package sample;
 
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.jsoup.Jsoup;
@@ -24,6 +27,8 @@ public class Main extends Application {
 
     private void fxStarter(Stage primaryStage, String type){
         VBox vbox = new VBox();
+        HBox hmenu = new HBox();
+        Group root = new Group();
         Elements newsHeadlines = parse(type);
         for (Element link : newsHeadlines) {
             String linkHref = link.attr("href");
@@ -42,11 +47,18 @@ public class Main extends Application {
         }
 
         ArrayList<String> btns = new ArrayList<String>();
+        btns.add("habrahabr");
         btns.add("php");
         btns.add("java");
         btns.add("python");
         btns.add("top");
-        btns.add("reboot");
+
+        btns.add("geektimes");
+        btns.add("DIY");
+        btns.add("Гаджеты");
+        btns.add("Лайфхаки");
+        btns.add("IOT");
+        btns.add("Android");
 
         for (int i = 0; i < btns.size(); i++) {
             String name = btns.get(i);
@@ -62,13 +74,18 @@ public class Main extends Application {
                 fxStarter(primaryStage, finalLink);
             });
             //пихаем в вертикальный список кнопку
-            vbox.getChildren().add(btn);
+            hmenu.getChildren().add(btn);
         }
 
         vbox.setSpacing(10);
+        vbox.setPadding(new Insets(30, 10, 10, 10));
+        hmenu.setAlignment(Pos.CENTER);
         vbox.setAlignment(Pos.CENTER);
-        Scene scene = new Scene(vbox);
+        Scene scene = new Scene(root);
+        root.getChildren().add(vbox);
+        root.getChildren().add(hmenu);
         primaryStage.setScene(scene);
+        primaryStage.setTitle("habrahabr&geektimes");
         primaryStage.show();
     }
 
@@ -80,6 +97,7 @@ public class Main extends Application {
 
     private static Elements parse(String type){
         String url = "all/";
+        String webDomen = "habrahabr.ru";
         if( !type.isEmpty() ){
             switch (type){
                 case "php":
@@ -91,14 +109,37 @@ public class Main extends Application {
                 case "python":
                     url = "hub/python/";
                     break;
-                case "top":
-                    url = "top/";
+                case "geektimes":
+                    webDomen = "geektimes.ru";
+                    break;
+                case "DIY":
+                    webDomen = "geektimes.ru";
+                    url = "hub/DIY/";
+                    break;
+                case "Гаджеты":
+                    webDomen = "geektimes.ru";
+                    url = "hub/gadgets/";
+                    break;
+                case "Лайфхаки":
+                    webDomen = "geektimes.ru";
+                    url = "hub/lifehacks/";
+                    break;
+                case "IOT":
+                    webDomen = "geektimes.ru";
+                    url = "hub/internet_of_things/";
+                    break;
+                case "Android":
+                    webDomen = "geektimes.ru";
+                    url = "hub/android/";
+                    break;
+                case "habrahabr":
+                    url = "all/";
                     break;
             }
         }
         Document doc = null;
         try {
-            doc = Jsoup.connect("http://habrahabr.ru/"+url).get();
+            doc = Jsoup.connect("http://"+webDomen+"/"+url).get();
         } catch (IOException e) {
             e.printStackTrace();
         }
